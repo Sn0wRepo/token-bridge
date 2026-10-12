@@ -1,0 +1,40 @@
+# Copy to relayer.toml and fill in. The signing key is read from RELAYER_PRIVATE_KEY, never from this file.
+
+state_file = "relayer-state.json"
+poll_interval_secs = 12
+
+[[chains]]
+name = "ethereum"
+chain_id = 1
+rpc_url = "https://ethereum-rpc.publicnode.com"
+vault = "0x1111111111111111111111111111111111111111"   # BridgeVault on Ethereum
+confirmations = 12
+start_block = 0                                         # vault deployment block
+max_block_range = 2000
+
+[[chains]]
+name = "base"
+chain_id = 8453
+rpc_url = "https://mainnet.base.org"
+vault = "0x2222222222222222222222222222222222222222"   # BridgeVault on Base
+confirmations = 10
+start_block = 0
+max_block_range = 2000
+
+# Solana is destination-only here: jobs are appended to a JSONL outbox that a Solana-side executor consumes.
+[solana]
+chain_id = 1399811149                                   # must match vault.setDestination(id, true)
+outbox = "solana-outbox.jsonl"
+
+# Native ETH maps to native ETH automatically. ERC-20s need an explicit route per direction.
+# [[tokens]]
+# src_chain_id = 1
+# src_token = "0x..."            # token locked on Ethereum
+# dst_chain_id = 8453
+# dst_token = "0x..."            # BridgedToken on Base
+#
+# [[tokens]]
+# src_chain_id = 1
+# src_token = "0x..."
+# dst_chain_id = 1399811149
+# dst_mint = "So11111111111111111111111111111111111111112"
